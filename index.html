@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+      html, body { height: 100%; margin: 0; font-family: 'Roboto', sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; }
+      .card { background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); text-align: center; width: 90%; max-width: 400px; transition: transform 0.3s ease; }
+      .card:hover { transform: translateY(-5px); }
+      h1 { color: #333; font-weight: 500; margin-bottom: 10px; }
+      p { color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+      .button { background: linear-gradient(45deg, #007BFF, #0056b3); color: white; border: none; padding: 15px 30px; font-size: 16px; font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); }
+      .button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4); }
+      .button:active { transform: translateY(0); }
+      .button:disabled { background: #cccccc; cursor: not-allowed; box-shadow: none; }
+      #message { margin-top: 20px; font-weight: 500; color: #28a745; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Панель керування</h1>
+      <p>Натисніть кнопку нижче, щоб надіслати лист з опціями керування на вашу пошту.</p>
+      <button class="button" id="send-email-btn" onclick="sendEmailRequest()">Надіслати лист</button>
+      <div id="message"></div>
+    </div>
+
+    <script>
+      // !!! ВАЖЛИВО: Замініть на URL вашого розгорнутого Google Apps Script !!!
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhgJVc3jS2g9ZoXWxMwXci5sfTSGgu683X3XSq4NYRTJIFa5hV2sTMIN6Q3QIrCR-kjw/exec";
+
+      function sendEmailRequest() {
+        const btn = document.getElementById('send-email-btn');
+        const msg = document.getElementById('message');
+        
+        btn.disabled = true;
+        btn.textContent = 'Надсилаємо...';
+        msg.textContent = '';
+        msg.style.color = '#28a745';
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors' 
+        })
+        .then(() => {
+           btn.disabled = false;
+           btn.textContent = 'Надіслати лист';
+           msg.textContent = '✅ Запит успішно надіслано на вашу пошту!';
+        })
+        .catch(error => {
+           btn.disabled = false;
+           btn.textContent = 'Надіслати лист';
+           msg.style.color = 'red';
+           msg.textContent = 'Помилка: Не вдалося надіслати запит.';
+           console.error('Fetch Error:', error);
+        });
+      }
+    </script>
+  </body>
+</html>
